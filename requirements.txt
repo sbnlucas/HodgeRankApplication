@@ -1,0 +1,8 @@
+streamlit
+streamlit-desktop-app
+pandas
+numpy
+matplotlib
+networkx
+scipy
+adjustText
