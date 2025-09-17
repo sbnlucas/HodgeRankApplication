@@ -3,6 +3,23 @@ import pandas as pd
 import numpy as np
 import hodgerank_core as hc
 import os
+import sys
+
+if getattr(sys, 'frozen', False):
+    try:
+        import runtime_hooks
+    except ImportError:
+        
+        base_path = sys._MEIPASS
+        pythonnet_path = os.path.join(base_path, 'pythonnet')
+        if os.path.exists(pythonnet_path):
+            if sys.platform == 'win32':
+                runtime_path = os.path.join(pythonnet_path, 'runtime')
+            else:
+                runtime_path = os.path.join(pythonnet_path, 'lib')
+            
+            if os.path.exists(runtime_path):
+                os.environ['PATH'] = runtime_path + os.pathsep + os.environ['PATH']
 
 def export_to_csv(data:pd.DataFrame, name:str):
     file = os.path.join(st.session_state.get("csv_folder"), name)
