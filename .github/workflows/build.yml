@@ -2,6 +2,8 @@ name: Build and Release Streamlit App
 
 on:
   push:
+    branches:
+      - main
     tags:
       - "v*"
 
@@ -15,10 +17,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -32,7 +34,7 @@ jobs:
           streamlit desktop build PythonCodes/app.py --output dist
 
       - name: Upload build as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}
           path: dist/
@@ -43,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download all builds
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: ./dist
 
