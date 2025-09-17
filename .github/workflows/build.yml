@@ -37,13 +37,22 @@ jobs:
       - name: List dist folder (debug)
         run: ls -R dist
 
-      - name: Zip build output
-        shell: bash
+      - name: Zip build output (Linux/macOS)
+        if: runner.os != 'Windows'
         run: |
           cd dist
           for d in */ ; do
             zip -r "../${{ runner.os }}-HodgeRankApp.zip" "$d"
           done
+
+      - name: Zip build output (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          cd dist
+          $folders = Get-ChildItem -Directory
+          foreach ($d in $folders) {
+            Compress-Archive -Path $d.FullName -DestinationPath "..\Windows-HodgeRankApp.zip"
+          }
 
       - name: Upload zipped build as artifact
         uses: actions/upload-artifact@v4
