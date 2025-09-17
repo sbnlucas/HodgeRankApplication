@@ -38,6 +38,7 @@ jobs:
         run: ls -R dist
 
       - name: Zip build output
+        shell: bash
         run: |
           cd dist
           for d in */ ; do
