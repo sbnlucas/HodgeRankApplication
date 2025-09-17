@@ -8,7 +8,6 @@ on:
 permissions:
   contents: write
 
-
 jobs:
   build:
     name: Build app for ${{ matrix.os }}
@@ -31,15 +30,28 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Build app
+      - name: Build app (onedir)
         run: |
-          streamlit-desktop-app build PythonCodes/app.py --name HodgeRankApp --icon assets/icon.ico --pyinstaller-options --onefile --noconfirm
+          streamlit-desktop-app build PythonCodes/app.py \
+            --name HodgeRankApp \
+            --icon assets/icon.ico \
+            --pyinstaller-options --noconfirm
 
-      - name: Upload build as artifact
+      - name: List dist folder (debug)
+        run: ls -R dist
+
+      - name: Zip build output
+        run: |
+          cd dist
+          for d in */ ; do
+            zip -r "../${{ runner.os }}-HodgeRankApp.zip" "$d"
+          done
+
+      - name: Upload zipped build as artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}
-          path: dist/
+          path: ./*.zip
 
   release:
     name: Create Release
@@ -51,14 +63,13 @@ jobs:
         with:
           path: ./dist
 
-      - name: List dist folder (debug)
+      - name: List downloaded artifacts
         run: ls -lh ./dist
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref_name }}
-          files: dist/*
+          files: ./dist/**/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
