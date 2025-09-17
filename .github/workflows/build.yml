@@ -1,4 +1,4 @@
-name: Build and Release Streamlit App
+name: Build and Release HodgeRankApp
 
 on:
   push:
@@ -32,10 +32,7 @@ jobs:
 
       - name: Build app (onedir)
         run: |
-          streamlit-desktop-app build PythonCodes/app.py \
-            --name HodgeRankApp \
-            --icon assets/icon.ico \
-            --pyinstaller-options --noconfirm
+          streamlit-desktop-app build PythonCodes/app.py --name HodgeRankApp --icon assets/icon.ico --pyinstaller-options --noconfirm
 
       - name: List dist folder (debug)
         run: ls -R dist
