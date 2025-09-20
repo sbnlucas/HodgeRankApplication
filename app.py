@@ -589,7 +589,7 @@ if step == 7:
 
     with col1:
         if "scatter" not in st.session_state or rebuild:
-            st.session_state["scatter"] = hc.plot_scatter_potentials_freq(items, potentials, frequencies, st.session_state.get("size", (6,4)), st.session_state.get("letters", 5), st.session_state.get("fontsize", 7))
+            st.session_state["scatter"] = hc.plot_scatter_potentials_freq(items, potentials, frequencies, st.session_state.get("size", (7,4)), st.session_state.get("letters", 4), st.session_state.get("fontsize", 6))
             st.session_state["imgscatter"] = hc.fig_to_png(st.session_state["scatter"])
 
         st.session_state["rebuild"] = False
