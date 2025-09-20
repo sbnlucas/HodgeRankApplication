@@ -13,16 +13,6 @@ def download_csv(data: pd.DataFrame, filename: str = "RankingTable.csv"):
         file_name=filename,
         mime="text/csv")
 
-def download_excel(data: pd.DataFrame, filename: str = "RankingTable.xlsx"):
-    buffer = io.BytesIO()
-    data.round(4).to_excel(buffer, index=False)
-    buffer.seek(0)
-    st.download_button(
-        label=f"Download {filename}",
-        data=buffer,
-        file_name=filename,
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-
 def download_png(fig, filename: str = "figure.png"):
     buffer = io.BytesIO()
     fig.savefig(buffer, format="png", dpi=300, bbox_inches="tight")
@@ -416,7 +406,8 @@ elif step == 4:
 
 
     data = st.session_state.get("data_filtered")
-    st.session_state["results"] = hc.compute_hodgerank(data)
+    if "results" not in st.session_state:
+        st.session_state["results"] = hc.compute_hodgerank(data)
 
     st.success("Hodge Rank finished!")
     col2c, col1c = st.columns(2)
@@ -484,8 +475,7 @@ if step == 5:
         left, right = st.columns(2)
         with left:
             download_csv(ranking_table, "RankingTable.csv")
-        with right:
-            download_excel(ranking_table, "RankingTable.xlsx")
+     
 
         col1c, col2c = st.columns(2)
         if col1c.button("⬅️ Back"): st.session_state["step"] = 3; st.rerun()
@@ -1113,8 +1103,7 @@ if step == 10:
         with left1:
             download_csv(edge_df, "InconsistentEdges.csv")
 
-        with right1:
-            download_excel(edge_df, "InconsistentEdges.xlsx")
+        
 
 
         # ----------------------------------------------------------
@@ -1147,8 +1136,6 @@ if step == 10:
             left2, right2 = st.columns(2)
             with left2:
                 download_csv(tri_df, "InconsistentTriangles.csv")
-            with right2:
-                download_excel(tri_df, "InconsistentTriangles.xlsx")
         else:
             st.success("✅ No significant 3-cycles detected.")
 
