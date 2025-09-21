@@ -412,11 +412,13 @@ def plot_graph(items, edges, weightedges, residuals,
         
         fig, ax = plt.subplots(figsize=(8, 6))
         nx.draw_networkx_nodes(nx.Graph(edges), pos,
-                               node_size=100, node_color="white",
+                               node_size=175, node_color="white",
                                edgecolors="black", linewidths=0.8, ax=ax)
 
         for node, (x, y) in pos.items():
-            ax.text(x + labels2[0], y + labels2[1], abbrev_map[node], fontsize=8, ha="center")
+            ax.text(x + labels2[0], y + labels2[1],
+                    abbrev_map[node] if layout1 != "default" else str(node_numbers[node]),
+                    fontsize=8, ha="center")
 
         for (u, v), lw, a, res in zip(edges, widths, alphas, edgeresidual):
 
@@ -433,6 +435,12 @@ def plot_graph(items, edges, weightedges, residuals,
             draw_residual_arrow(ax, u, v, res, color, lw, a)
 
         ax.axis("off")
+
+        if layout2 == "default":
+            legend_text = "\n".join([f"{node_numbers[n]}. {n}" for n in items])
+            fig.text(1.05, 0.5, legend_text, va="center", ha="left", fontsize=9)
+
+
         return fig
 
     fig1 = plot_weighted_graph(get_positions(layout1, wgraph=True))

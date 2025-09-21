@@ -226,7 +226,7 @@ elif step == 2:
 
     with col1:
         
-        uploaded_file = st.file_uploader("Upload a .csv or .xlsx file", type=["csv", "xlsx"])
+        uploaded_file = st.file_uploader("Upload a .csv file", type=["csv"])
 
         def validate_dataset_structure(df: pd.DataFrame):
             """
@@ -272,14 +272,9 @@ elif step == 2:
             return len(errors) == 0, errors, warnings
 
         if uploaded_file is not None:
-            st.session_state["saved_file"] = uploaded_file
-            if uploaded_file.name.endswith(".csv"):
-                raw_data = pd.read_csv(uploaded_file, header=None)
-            else:
-                raw_data = pd.read_excel(uploaded_file, header=None)
+            st.session_state["saved_file"] = uploaded_file     
+            raw_data = pd.read_csv(uploaded_file, header=None)
             st.session_state["loaded_data"] = raw_data
-
-
     if "loaded_data" in st.session_state:
 
         raw_data = st.session_state["loaded_data"]
@@ -474,9 +469,8 @@ if step == 5:
 
         left, right = st.columns(2)
         with left:
-            download_csv(ranking_table, "RankingTable.csv")
+            download_csv(ranking_table.sort_values(by="Potential Score", ascending = False), "RankingTable.csv")
      
-
         col1c, col2c = st.columns(2)
         if col1c.button("⬅️ Back"): st.session_state["step"] = 3; st.rerun()
         if col2c.button("➡️ Proceed"): st.session_state["step"] = 6; st.rerun()
@@ -674,7 +668,7 @@ if step == 8:
     ranking_table = results["rankingtable"]
     potentials = ranking_table.loc[:, "Potential Score"]
     frequencies = ranking_table.loc[:, "Evaluation Frequency (%)"]
-    potentials -= np.mean(potentials.values) 
+    potentials -= (potentials.values[len(potentials)//2]) 
 
     if "graphs" not in st.session_state or st.session_state["rebuild"]:
         
@@ -745,8 +739,8 @@ if step == 8:
                 part_option1 = st.radio("Select the layout of the **Weighted Edges Graph**:",
                                 options=["Kamada Kawai Layout", "Potentials x Frequencies"])
                 
-                dx1 = st.slider("Label shift (x-axis) **(Weighted Edges Graph)**", min_value=-5.5, max_value=5.5, step=0.01, value= 0.0)
-                dy1 = st.slider("Label shift (y-axis) **(Weighted Edges Graph)**", min_value=-5.5, max_value=5.5, step=0.01, value= 0.05)
+                dx1 = st.slider("Label shift (x-axis) **(Weighted Edges Graph)**", min_value=-0.1, max_value=0.1, step=0.005, value= 0.0)
+                dy1 = st.slider("Label shift (y-axis) **(Weighted Edges Graph)**", min_value=-0.1, max_value=0.1, step=0.005, value= 0.05)
                 
                 st.session_state["dx1"] = dx1  
                 st.session_state["dy1"] = dy1
@@ -761,8 +755,8 @@ if step == 8:
                             "Highlight only negative residuals",
                             "Highlight only positive residuals"])
 
-                dx2 = st.slider("Label shift (x-axis) **(Residuals Graph)**", min_value=-5.5, max_value=5.5, step=0.01, value= 0.0)
-                dy2 = st.slider("Label shift (y-axis) **(Residuals Graph)**", min_value=-5.5, max_value=5.5, step=0.01, value= 0.05)
+                dx2 = st.slider("Label shift (x-axis) **(Residuals Graph)**", min_value=-0.1, max_value=0.1, step=0.005, value= 0.0)
+                dy2 = st.slider("Label shift (y-axis) **(Residuals Graph)**", min_value=-0.1, max_value=0.1, step=0.005, value= 0.05)
 
                 st.session_state["dx2"] = dx2
                 st.session_state["dy2"] = dy2
@@ -838,6 +832,14 @@ if step == 8:
         st.session_state["rebuild"] = True
         st.session_state["type_plotw"] = st.session_state["Layout1"]
         st.session_state["type_plotr"] = st.session_state["Layout2"]
+
+        if st.session_state["Layout1"] == "default":
+            st.session_state["dx1"]*= 100
+            st.session_state["dy1"]*=100
+
+        if st.session_state["Layout2"] == "default":
+            st.session_state["dx2"]*= 100
+            st.session_state["dy2"]*=100
         st.rerun()
     
     type_plot = {
@@ -1173,7 +1175,7 @@ if step == 10:
 
 if step == 11:
     # Step 11 - Closing and Acknowledgment
-    st.markdown("## Step 11: Closing Remarks")
+    st.markdown("## Closing Remarks")
 
     st.success("""
     Thank you for using the **Hodge Decomposition Ranking App**!  
