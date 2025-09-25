@@ -1,6 +1,5 @@
 # HodgeRank Analyzer
 
-**Authors:** Your Name(s)  
 **Repository license:** Apache License 2.0  
 **Released application:** available directly on [Streamlit Community Cloud](https://hodgerankapplication.streamlit.app/)
 
@@ -121,5 +120,13 @@ If you use this tool in academic work, presentations, or derived projects, pleas
   url          = {https://github.com/sbnlucas/HodgeRankApplication},
   note         = {Official application hosted at \url{https://hodgerankapplication.streamlit.app/}. Released under the Apache License 2.0.}
 }
+```
+
+## Authors 
+
+- Lucas dos Santos
+- Marcos Calçada
+- José Tadeu Lunardi
+
 
 
